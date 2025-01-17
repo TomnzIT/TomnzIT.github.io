@@ -87,13 +87,13 @@
                 return files[arg] || `cat: ${arg}: No such file or directory`;
             },
             help: () =>
-                "Available commands:\nls, cat [file], run animation, history, clear, help",
+                "Available commands:\nls, cat [file], lapin, history, clear, help",
             clear: () => {
                 output.innerHTML = "";
                 return "";
             },
             history: () => history.join("\n"),
-            "run animation": () => {
+            "lapin": () => {
                 playAnimation();
                 return "";
             },
