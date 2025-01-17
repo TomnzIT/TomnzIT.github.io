@@ -73,12 +73,6 @@
         const userInput = document.getElementById("user-input");
         const prompt = document.getElementById("prompt");
 
-        const themes = {
-            green: { background: "#000", color: "#00ff00" },
-            blue: { background: "#001f3f", color: "#1e90ff" },
-            white: { background: "#fff", color: "#000" },
-        };
-
         const history = [];
         let historyIndex = -1;
 
@@ -92,33 +86,17 @@
                 };
                 return files[arg] || `cat: ${arg}: No such file or directory`;
             },
-            man: (arg) => {
-                const manuals = {
-                    ls: "ls: List files and directories.",
-                    cat: "cat [file]: Display the contents of a file.",
-                    theme: "theme [color]: Change the terminal theme (green, blue, white).",
-                };
-                return manuals[arg] || `No manual entry for ${arg}`;
-            },
-            theme: (arg) => {
-                if (themes[arg]) {
-                    document.body.style.backgroundColor = themes[arg].background;
-                    document.body.style.color = themes[arg].color;
-                    terminal.style.borderColor = themes[arg].color;
-                    return `Theme changed to ${arg}`;
-                }
-                return `theme: ${arg}: Invalid theme. Available themes: green, blue, white.`;
-            },
-            history: () => history.join("\n"),
-            echo: (arg) => arg,
+            help: () =>
+                "Available commands:\nls, cat [file], run animation, history, clear, help",
             clear: () => {
                 output.innerHTML = "";
                 return "";
             },
-            help: () =>
-                "Available commands:\nls, cat [file], man [command], theme [color], echo [text], history, clear, help",
-            pwd: () => "/home/user",
-            secret: () => "You found the easter egg! Keep exploring!",
+            history: () => history.join("\n"),
+            "run animation": () => {
+                playAnimation();
+                return "";
+            },
         };
 
         const processCommand = (input) => {
@@ -158,6 +136,34 @@
 
                 userInput.textContent = history[historyIndex] || "";
             }
+        };
+
+        const playAnimation = () => {
+            const frames = [
+                "   (\\_/)\n  (='.'=)\n  (\")_(\")  Bunny is running...\n",
+                "   (\\_/)\n  ('.'.)\n  (\")_(\")  Bunny is running...\n",
+                "   (\\_/)\n  (='.'=)\n  (\")_(\")  Bunny is running...\n",
+                "   (\\_/)\n  ('.'.)\n  (\")_(\")  Bunny is running...\n",
+            ];
+
+            let index = 0;
+
+            const interval = setInterval(() => {
+                const animationFrame = document.createElement("div");
+                animationFrame.textContent = frames[index];
+                output.appendChild(animationFrame);
+
+                terminal.scrollTop = terminal.scrollHeight;
+
+                index = (index + 1) % frames.length;
+
+                if (index === 0) {
+                    clearInterval(interval);
+                    const endMessage = document.createElement("div");
+                    endMessage.textContent = "Animation complete!";
+                    output.appendChild(endMessage);
+                }
+            }, 500);
         };
 
         window.onload = () => {
