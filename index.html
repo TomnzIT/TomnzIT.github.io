@@ -3,85 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bienvenue sur mon site personnel">
-    <title>Mon Portfolio</title>
+    <title>Terminal Linux</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
+            font-family: "Courier New", Courier, monospace;
+            background-color: #000;
+            color: #00ff00;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        header {
-            background: #0073e6;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        nav {
-            margin: 0 auto;
-            text-align: center;
-        }
-        nav a {
-            color: #fff;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        section {
-            max-width: 800px;
-            margin: 2rem auto;
+
+        #terminal {
+            width: 80%;
+            height: 70%;
+            background-color: #000;
             padding: 1rem;
-            background: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid #00ff00;
+            overflow-y: auto;
         }
-        footer {
-            text-align: center;
-            margin: 1rem 0;
-            padding: 1rem 0;
-            background: #0073e6;
-            color: #fff;
+
+        .line {
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt {
+            margin-right: 5px;
+        }
+
+        .input {
+            flex: 1;
+            outline: none;
+            border: none;
+            background: none;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .output {
+            white-space: pre-wrap;
+            margin-left: 1rem;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Bienvenue sur mon site</h1>
-        <p>Un aperçu de mes projets et compétences</p>
-        <nav>
-            <a href="#about">À propos</a>
-            <a href="#projects">Projets</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+    <div id="terminal">
+        <div class="line">
+            <span class="prompt">user@site:~$</span>
+            <input type="text" id="input" class="input" autofocus />
+        </div>
+    </div>
 
-    <section id="about">
-        <h2>À propos de moi</h2>
-        <p>Je suis étudiant en cybersécurité avec un intérêt particulier pour la conformité et la gestion des risques. Passionné par la sécurité informatique, je travaille à apporter des solutions efficaces et adaptées aux entreprises.</p>
-    </section>
+    <script>
+        const terminal = document.getElementById("terminal");
+        const inputField = document.getElementById("input");
 
-    <section id="projects">
-        <h2>Mes Projets</h2>
-        <ul>
-            <li><a href="https://github.com/ton-pseudo/projet1" target="_blank">Projet 1 - Analyse de risques</a></li>
-            <li><a href="https://github.com/ton-pseudo/projet2" target="_blank">Projet 2 - Automatisation de scripts</a></li>
-            <li><a href="https://github.com/ton-pseudo/projet3" target="_blank">Projet 3 - Étude de cas ISO 27002</a></li>
-        </ul>
-    </section>
+        const files = {
+            projets: "1. Analyse de risques\n2. Automatisation de scripts\n3. Étude de cas ISO 27002",
+            experiences: "Alternance - GRC Cyber chez Valeo (3 ans)\nProjet - Analyse RGPD pour des données personnelles",
+        };
 
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Vous pouvez me joindre via :</p>
-        <ul>
-            <li>Email : <a href="mailto:ton-email@example.com">ton-email@example.com</a></li>
-            <li>LinkedIn : <a href="https://www.linkedin.com/in/ton-profil" target="_blank">Mon profil</a></li>
-            <li>GitHub : <a href="https://github.com/ton-pseudo" target="_blank">Mon GitHub</a></li>
-        </ul>
-    </section>
+        const commands = {
+            ls: () => Object.keys(files).join("\n"),
+            cat: (arg) => files[arg] || `cat: ${arg}: Aucun fichier ou dossier de ce type`,
+            help: () => "Commandes disponibles:\n- ls\n- cat [fichier]\n- clear\n- help",
+            clear: () => {
+                terminal.innerHTML = "";
+                createNewPrompt();
+                return "";
+            },
+        };
 
-    <footer>
-        <p>© 2025 Mon Portfolio. Tous droits réservés.</p>
-    </footer>
+        function executeCommand(command) {
+            const [cmd, ...args] = command.split(" ");
+            if (commands[cmd]) {
+                return commands[cmd](...args);
+            } else {
+                return `${cmd}: commande non trouvée`;
+            }
+        }
+
+        function createNewPrompt() {
+            const line = document.createElement("div");
+            line.classList.add("line");
+
+            const prompt = document.createElement("span");
+            prompt.classList.add("prompt");
+            prompt.textContent = "user@site:~$";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.classList.add("input");
+            input.addEventListener("keydown", handleInput);
+
+            line.appendChild(prompt);
+            line.appendChild(input);
+            terminal.appendChild(line);
+            input.focus();
+        }
+
+        function handleInput(event) {
+            if (event.key === "Enter") {
+                const input = event.target;
+                const command = input.value.trim();
+                const output = document.createElement("div");
+                output.classList.add("output");
+
+                output.textContent = executeCommand(command);
+
+                terminal.appendChild(output);
+                input.disabled = true;
+                createNewPrompt();
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        }
+
+        inputField.addEventListener("keydown", handleInput);
+    </script>
 </body>
 </html>
