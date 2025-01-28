@@ -6,283 +6,305 @@
     <title>WebOS Portfolio</title>
     <style>
         :root {
-            --desktop-bg: #008080;
+            --desktop-bg: #008080 url('wallpaper.jpg');
             --taskbar-bg: #c0c0c0;
             --window-bg: #c0c0c0;
             --text-color: #000000;
         }
 
-        /* Bureau */
-        body {
-            margin: 0;
-            height: 100vh;
-            background: var(--desktop-bg) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
-            font-family: 'MS Sans Serif', sans-serif;
+        /* Écran de boot */
+        .boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .boot-loader {
+            width: 200px;
+            height: 4px;
+            background: #333;
+            margin: 20px;
             overflow: hidden;
-            user-select: none;
+        }
+
+        .boot-progress {
+            width: 0%;
+            height: 100%;
+            background: #fff;
+            transition: width 2s;
         }
 
         /* Écran de connexion */
-        #login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: #2a2a2a;
-            color: white;
-            flex-direction: column;
-        }
-
-        #login-form {
-            background: #333;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        #login-form input {
-            margin: 10px;
-            padding: 10px;
-            width: 200px;
-            border: none;
-            border-radius: 5px;
-            background-color: #444;
-            color: white;
-            font-size: 16px;
-        }
-
-        #login-form button {
-            background-color: #008080;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        #login-form button:hover {
-            background-color: #005757;
-        }
-
-        /* Bureau */
-        .desktop-icon {
-            position: absolute;
-            width: 80px;
-            padding: 8px;
-            text-align: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-
-        .desktop-icon:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .desktop-icon img {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 4px;
-        }
-
-        /* Fenêtres */
-        .window {
-            position: absolute;
-            background: var(--window-bg);
-            border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            min-width: 300px;
-            min-height: 200px;
-            resize: both;
-            overflow: hidden;
-            transition: all 0.3s;
-            display: none;
-        }
-
-        .window-header {
-            background: #000080;
-            color: white;
-            padding: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-        }
-
-        .window-controls button {
-            background: var(--window-bg);
-            border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            margin-left: 2px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        /* Barre des tâches */
-        #taskbar {
+        .login-screen {
             position: fixed;
-            bottom: 0;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 40px;
-            background: var(--taskbar-bg);
-            border-top: 2px solid #ffffff;
-            display: flex;
+            height: 100%;
+            background: var(--desktop-bg);
+            display: none;
             align-items: center;
-            padding: 0 8px;
-            gap: 4px;
+            justify-content: center;
+            z-index: 999;
         }
 
-        .taskbar-item {
-            padding: 4px 8px;
-            border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            background: var(--taskbar-bg);
-        }
-
-        /* Terminal */
-        .terminal-body {
-            background: #000000;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            padding: 8px;
-            height: calc(100% - 24px);
-            overflow-y: auto;
-        }
-
-        .terminal-input {
-            background: none;
-            border: none;
-            color: #00ff00;
-            font-family: inherit;
-            width: 90%;
-            outline: none;
-        }
-
-        /* Menu contextuel */
-        .context-menu {
-            position: absolute;
+        .login-box {
             background: var(--window-bg);
+            padding: 20px;
             border: 2px solid;
             border-color: #ffffff #808080 #808080 #ffffff;
-            padding: 2px;
+            text-align: center;
         }
 
-        .context-menu-item {
-            padding: 4px 32px 4px 8px;
+        .post-it {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            background: #ff9;
+            padding: 20px;
+            transform: rotate(5deg);
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        /* Ajouts pour le nouvel explorateur de fichiers */
+        .file-explorer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 100px);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .file-item {
+            text-align: center;
+            padding: 5px;
             cursor: pointer;
         }
 
-        .context-menu-item:hover {
-            background: #000080;
-            color: white;
+        .file-item:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* Ajout pour le navigateur web */
+        .web-browser iframe {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+        }
+
+        /* Ajout pour le bloc-notes */
+        .notepad-textarea {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+            resize: none;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
+    <!-- Écran de boot -->
+    <div class="boot-screen">
+        <div class="boot-loader">
+            <div class="boot-progress"></div>
+        </div>
+        <div>Chargement du système...</div>
+    </div>
+
     <!-- Écran de connexion -->
-    <div id="login-screen">
-        <div id="login-form">
-            <h2>Connexion</h2>
-            <input type="text" id="username" placeholder="Nom d'utilisateur">
-            <input type="password" id="password" placeholder="Mot de passe">
-            <button onclick="login()">Se connecter</button>
+    <div class="login-screen">
+        <div class="post-it">
+            <h3>Identifiants</h3>
+            <p>User: guest</p>
+            <p>Password: password123</p>
+        </div>
+        <div class="login-box">
+            <img src="user-icon.png" alt="User" width="80">
+            <div style="margin: 15px 0;">
+                <input type="text" id="username" placeholder="Nom d'utilisateur" style="margin: 5px;"><br>
+                <input type="password" id="password" placeholder="Mot de passe" style="margin: 5px;">
+            </div>
+            <button onclick="System.login()">Connexion</button>
         </div>
     </div>
 
-    <!-- Bureau (initialement masqué) -->
-    <div id="desktop">
-        <!-- Icônes du bureau -->
-        <div class="desktop-icon" style="left: 20px; top: 20px;" ondblclick="WindowManager.open('terminal')">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABNklEQVRoge2ZMQ6CQBBF/4hWlhYWXoDee/AEXsDKY3gST2Bna2GhhY2JicZkWVhYWBh2Q2A3yLK6A8uGf0JgWfZnZv6fHWBgYGBg+CD8uT5kQcQdgC6AFoAKgCKAxVm0DmAFYAZgQkRjq1xE5PpQxAOAHoDqC3HWAAYAHlY5icj1oYgxgPYbY1cA2kQ0fTcXk4jI9aGICYDGC+OWABpENHOVi4hcH4qY4r6JlwAaRDR3nYuIXB+KmAGo3zC2BNAkoqWvXETk+lDEDEDtYkwJQImI1r5zEZHrQxHnJhYASjEzEZGvG2kOoHr2rAjgSETbEHIRkev1OAJQO/1fALCLlYeIXK/H6D9ERK7XY/QfIiLX6zH6DxGR6/UY/YeIyPV6jP5DROT6A3pS0idBQj1BAAAAAElFTkSuCorMII=" alt="Terminal">
-            Terminal
-        </div>
+    <!-- Nouveaux éléments -->
+    <div id="context-menu" class="context-menu" style="display: none;">
+        <div class="context-menu-item" onclick="FileManager.openWallpaperPicker()">Changer le fond d'écran</div>
+        <div class="context-menu-item" onclick="WindowManager.open('explorer')">Ouvrir l'explorateur</div>
+    </div>
 
-        <!-- Fenêtre terminal -->
-        <div id="terminal-window" class="window">
-            <div class="window-header">
-                <span>Terminal</span>
-                <div class="window-controls">
-                    <button onclick="WindowManager.minimize('terminal')">_</button>
-                    <button onclick="WindowManager.close('terminal')">✕</button>
-                </div>
-            </div>
-            <div class="terminal-body">
-                <div id="terminal-output"></div>
-                <div class="input-container">
-                    <span style="color: lime;">C:\></span>
-                    <div id="terminal-input" contenteditable="true" class="terminal-input"></div>
-                </div>
+    <!-- Fenêtre explorateur de fichiers -->
+    <div id="explorer-window" class="window">
+        <div class="window-header">
+            <span>Explorateur de fichiers</span>
+            <div class="window-controls">
+                <button onclick="WindowManager.minimize('explorer')">_</button>
+                <button onclick="WindowManager.close('explorer')">✕</button>
             </div>
         </div>
+        <div class="file-explorer">
+            <!-- Les fichiers seront générés dynamiquement -->
+        </div>
+    </div>
 
-        <!-- Barre des tâches -->
-        <div id="taskbar">
-            <button class="taskbar-item" onclick="WindowManager.open('terminal')">Terminal</button>
-            <div id="system-tray" style="margin-left: auto; display: flex; gap: 4px;">
-                <div id="clock" class="taskbar-item"></div>
+    <!-- Fenêtre navigateur web -->
+    <div id="browser-window" class="window">
+        <div class="window-header">
+            <span>Navigateur Web</span>
+            <div class="window-controls">
+                <button onclick="WindowManager.minimize('browser')">_</button>
+                <button onclick="WindowManager.close('browser')">✕</button>
             </div>
         </div>
+        <div style="padding: 10px;">
+            <input type="text" id="url-bar" style="width: 80%">
+            <button onclick="Browser.navigate()">Aller</button>
+        </div>
+        <iframe id="browser-frame"></iframe>
+    </div>
+
+    <!-- Fenêtre bloc-notes -->
+    <div id="notepad-window" class="window">
+        <div class="window-header">
+            <span>Bloc-notes</span>
+            <div class="window-controls">
+                <button onclick="WindowManager.minimize('notepad')">_</button>
+                <button onclick="WindowManager.close('notepad')">✕</button>
+            </div>
+        </div>
+        <textarea class="notepad-textarea"></textarea>
     </div>
 
     <script>
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        // Nouveau système de gestion globale
+        class System {
+            static init() {
+                // Simulation du processus de boot
+                document.querySelector('.boot-progress').style.width = '100%';
+                setTimeout(() => {
+                    document.querySelector('.boot-screen').style.display = 'none';
+                    document.querySelector('.login-screen').style.display = 'flex';
+                }, 2000);
+            }
 
-            // Vérification des informations de connexion
-            if (username === 'admin' && password === 'password') {
-                document.getElementById('login-screen').style.display = 'none';  // Cache l'écran de connexion
-                document.getElementById('desktop').style.display = 'block';     // Affiche le bureau
-                WindowManager.init();
-                WindowManager.open('terminal');
-            } else {
-                alert('Nom d\'utilisateur ou mot de passe incorrect');
+            static login() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if(username === 'guest' && password === 'password123') {
+                    document.querySelector('.login-screen').style.display = 'none';
+                    WindowManager.init();
+                    FileManager.init();
+                    Browser.init();
+                } else {
+                    alert('Identifiants incorrects !');
+                }
             }
         }
 
-        class WindowManager {
-            static windows = {
-                terminal: {
-                    element: document.getElementById('terminal-window'),
-                    state: 'closed',
-                    position: { x: 100, y: 100 },
-                    size: { width: 600, height: 400 }
+        // Gestionnaire de fichiers amélioré
+        class FileManager {
+            static files = {
+                'Documents': {
+                    'CV.pdf': {type: 'pdf', icon: 'cv-icon.png'},
+                    'Projets.txt': {type: 'text', icon: 'text-icon.png'}
+                },
+                'Images': {
+                    'wallpaper.jpg': {type: 'image', icon: 'image-icon.png'}
                 }
             };
 
             static init() {
-                // Horloge système
-                setInterval(() => {
-                    document.getElementById('clock').textContent = 
-                        new Date().toLocaleTimeString();
-                }, 1000);
+                // Gestion du clic droit
+                document.body.oncontextmenu = e => {
+                    e.preventDefault();
+                    const menu = document.getElementById('context-menu');
+                    menu.style.display = 'block';
+                    menu.style.left = `${e.pageX}px`;
+                    menu.style.top = `${e.pageY}px`;
+                };
+
+                // Fermeture du menu contextuel
+                document.body.onclick = () => {
+                    document.getElementById('context-menu').style.display = 'none';
+                };
             }
 
-            static open(id) {
-                const win = this.windows[id];
-                win.state = 'open';
-                win.element.style.display = 'block';
-                this.bringToFront(id);
-            }
-
-            static close(id) {
-                this.windows[id].state = 'closed';
-                this.windows[id].element.style.display = 'none';
-            }
-
-            static minimize(id) {
-                this.windows[id].element.style.transform = 'translateY(100vh)';
-                setTimeout(() => this.close(id), 300);
-            }
-
-            static bringToFront(id) {
-                const zIndexes = Array.from(document.querySelectorAll('.window'))
-                    .map(w => parseInt(w.style.zIndex) || 0);
-                const maxZIndex = Math.max(...zIndexes, 0);
-                this.windows[id].element.style.zIndex = maxZIndex + 1;
+            static openWallpaperPicker() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = e => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        document.body.style.backgroundImage = `url(${reader.result})`;
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
             }
         }
+
+        // Navigateur web
+        class Browser {
+            static init() {
+                document.getElementById('url-bar').addEventListener('keypress', e => {
+                    if(e.key === 'Enter') this.navigate();
+                });
+            }
+
+            static navigate() {
+                const url = document.getElementById('url-bar').value;
+                const frame = document.getElementById('browser-frame');
+                frame.src = url.startsWith('http') ? url : `https://${url}`;
+            }
+        }
+
+        // Mise à jour du WindowManager
+        WindowManager.windows = {
+            ...WindowManager.windows,
+            explorer: {
+                element: document.getElementById('explorer-window'),
+                state: 'closed',
+                position: { x: 200, y: 200 },
+                size: { width: 600, height: 400 }
+            },
+            browser: {
+                element: document.getElementById('browser-window'),
+                state: 'closed',
+                position: { x: 300, y: 300 },
+                size: { width: 800, height: 600 }
+            },
+            notepad: {
+                element: document.getElementById('notepad-window'),
+                state: 'closed',
+                position: { x: 400, y: 400 },
+                size: { width: 500, height: 400 }
+            }
+        };
+
+        // Ajout de commandes au terminal
+        Terminal.commands = {
+            ...Terminal.commands,
+            explorer: () => WindowManager.open('explorer'),
+            browser: () => WindowManager.open('browser'),
+            notepad: () => WindowManager.open('notepad'),
+            wall: () => FileManager.openWallpaperPicker()
+        };
+
+        // Initialisation du système
+        window.onload = System.init;
     </script>
 </body>
 </html>
