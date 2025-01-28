@@ -3,327 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Portfolio - John Doe</title>
+    <title>OS Portfolio - John Doe</title>
     <style>
         :root {
-            --primary-color: #00ff00;
-            --background-color: #000000;
-            --error-color: #ff5555;
-            --success-color: #00ff00;
-            --warning-color: #ffb86c;
-            --link-color: #8be9fd;
+            --primary-color: #ffffff;
+            --background-color: #008080;
+            --window-border: #c0c0c0;
+            --taskbar-height: 40px;
         }
 
+        /* Style du bureau */
         body {
             margin: 0;
-            padding: 2rem;
-            background-color: var(--background-color);
-            font-family: "Fira Code", monospace;
-            color: var(--primary-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100vh;
+            background: var(--background-color) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
+            font-family: 'MS Sans Serif', sans-serif;
+            overflow: hidden;
         }
 
-        #terminal {
-            width: 100%;
-            max-width: 800px;
-            background-color: rgba(0, 0, 0, 0.9);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            border: 1px solid rgba(0, 255, 0, 0.2);
-            position: relative;
-        }
-
-        #output {
-            margin-bottom: 1rem;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            overflow-anchor: none;
-        }
-
-        .input-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            position: relative;
-        }
-
-        #prompt {
-            color: var(--primary-color);
-            white-space: nowrap;
+        /* Icônes du bureau */
+        .desktop-icon {
+            position: absolute;
+            width: 80px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
             user-select: none;
-            flex-shrink: 0;
         }
 
-        #user-input {
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            color: inherit;
-            font-family: inherit;
-            font-size: 1em;
-            outline: none;
-            caret-color: var(--primary-color);
-            white-space: pre-wrap;
-            word-break: break-word;
-            min-height: 1.2em;
-            padding: 2px 0;
+        .desktop-icon img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
         }
 
-        .cmd-error { color: var(--error-color); }
-        .cmd-success { color: var(--success-color); }
-        .cmd-warning { color: var(--warning-color); }
-        .file-dir { color: #87ceeb; }
-        .file-exe { color: #ff79c6; }
-        .highlight { color: #ffff00; }
-        .link { color: var(--link-color); text-decoration: underline; cursor: pointer; }
+        /* Fenêtres */
+        .window {
+            position: absolute;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            min-width: 300px;
+            min-height: 200px;
+            resize: both;
+            overflow: hidden;
+        }
 
-        .scanlines {
+        .window-header {
+            background: #000080;
+            color: white;
+            padding: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .window-controls button {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            margin-left: 2px;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Barre des tâches */
+        #taskbar {
             position: fixed;
-            top: 0;
-            left: 0;
+            bottom: 0;
             width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15) 0px,
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            pointer-events: none;
-            z-index: 999;
+            height: var(--taskbar-height);
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
         }
 
-        @keyframes terminal-flicker {
-            0% { opacity: 0.9; }
-            50% { opacity: 1; }
-            100% { opacity: 0.9; }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 1rem; }
-            #terminal { padding: 1rem; }
+        /* Terminal spécifique */
+        .terminal-body {
+            background: black;
+            color: lime;
+            font-family: 'Courier New', monospace;
+            padding: 8px;
+            height: calc(100% - 24px);
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
-    <div class="scanlines"></div>
-    <div id="terminal">
-        <div id="output"></div>
-        <div class="input-container">
-            <span id="prompt">john@portfolio:~$</span>
-            <div id="user-input" contenteditable="true" spellcheck="false"></div>
+    <!-- Icône du terminal -->
+    <div class="desktop-icon" style="left: 20px; top: 20px;" onclick="openTerminal()">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABNklEQVRoge2ZMQ6CQBBF/4hWlhYWXoDee/AEXsDKY3gST2Bna2GhhY2JicZkWVhYWBh2Q2A3yLK6A8uGf0JgWfZnZv6fHWBgYGBg+CD8uT5kQcQdgC6AFoAKgCKAxVm0DmAFYAZgQkRjq1xE5PpQxAOAHoDqC3HWAAYAHlY5icj1oYgxgPYbY1cA2kQ0fTcXk4jI9aGICYDGC+OWABpENHOVi4hcH4qY4r6JlwAaRDR3nYuIXB+KmAGo3zC2BNAkoqWvXETk+lDEDEDtYkwJQImI1r5zEZHrQxHnJhYASjEzEZGvG2kOoHr2rAjgSETbEHIRkev1OAJQO/1fALCLlYeIXK/H6D9ERK7XY/QfIiLX6zH6DxGR6/UY/YeIyPV6jP5DROT6A3pS0idBQj1BAAAAAElFTkSuCorMII=" alt="Terminal">
+        Terminal
+    </div>
+
+    <!-- Fenêtre du terminal -->
+    <div id="terminal-window" class="window" style="left: 100px; top: 100px; display: none;">
+        <div class="window-header">
+            <span>Terminal</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('terminal')">_</button>
+                <button onclick="closeWindow('terminal')">✕</button>
+            </div>
+        </div>
+        <div class="terminal-body">
+            <div id="output"></div>
+            <div class="input-container">
+                <span style="color: lime;">C:\></span>
+                <input type="text" id="command-input" style="background: black; border: none; color: lime; outline: none;">
+            </div>
         </div>
     </div>
 
+    <!-- Barre des tâches -->
+    <div id="taskbar">
+        <button onclick="openTerminal()">Terminal</button>
+    </div>
+
     <script>
-        class Terminal {
-            constructor() {
-                this.output = document.getElementById('output');
-                this.userInput = document.getElementById('user-input');
-                this.prompt = document.getElementById('prompt');
-                this.history = JSON.parse(localStorage.getItem('termHistory')) || [];
-                this.historyIndex = this.history.length;
-                this.currentDir = '~';
-                this.plugins = new Set();
-                this.fileSystem = this.createVirtualFileSystem();
-                this.initCommands();
-                this.init();
-            }
+        // Gestion des fenêtres
+        let activeWindow = null;
+        const windows = {};
 
-            initCommands() {
-                this.commands = {
-                    // Commandes de base
-                    'help': {
-                        desc: 'Affiche cette aide',
-                        execute: () => this.formatHelp()
-                    },
-                    'clear': {
-                        desc: 'Efface le terminal',
-                        execute: () => this.clearTerminal()
-                    },
-                    'history': {
-                        desc: 'Affiche l\'historique',
-                        execute: () => this.showHistory()
-                    },
-
-                    // Système de fichiers virtuel
-                    'ls': {
-                        desc: 'Liste les fichiers',
-                        execute: (args) => this.listFiles(args[0])
-                    },
-                    'cd': {
-                        desc: 'Change de répertoire',
-                        execute: (args) => this.changeDirectory(args[0])
-                    },
-                    'cat': {
-                        desc: 'Affiche un fichier',
-                        execute: (args) => this.showFile(args[0])
-                    },
-
-                    // Commandes réseau
-                    'ping': {
-                        desc: 'Test de connexion',
-                        execute: async (args) => this.pingHost(args[0])
-                    },
-                    'curl': {
-                        desc: 'Transfert URL',
-                        execute: async (args) => this.fetchUrl(args[0])
-                    },
-
-                    // IA intégrée
-                    'ask': {
-                        desc: 'Posez une question',
-                        execute: async (args) => this.chatGPT(args.join(' '))
-                    },
-
-                    // Easter eggs
-                    'sudo': {
-                        desc: 'Privilèges super-utilisateur',
-                        execute: () => this.easterEgg('sudo')
-                    }
-                };
-            }
-
-            // Système de fichiers virtuel
-            createVirtualFileSystem() {
-                return {
-                    '~': {
-                        type: 'dir',
-                        content: {
-                            'cv.md': { 
-                                type: 'file',
-                                content: '### John Doe\n**Expérience**: 5 ans en sécurité informatique\n**Education**: Master en Cybersécurité',
-                                perm: 'rw-'
-                            },
-                            'projets': {
-                                type: 'dir',
-                                content: {
-                                    'portfolio': {
-                                        type: 'file',
-                                        content: 'Site personnel avec React/Node.js',
-                                        perm: 'r--'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-
-            // Plugins système
-            registerPlugin(pluginName, setup) {
-                if(this.plugins.has(pluginName)) return;
-                setup(this);
-                this.plugins.add(pluginName);
-            }
-
-            // Easter eggs et fonctionnalités cachées
-            easterEgg(type) {
-                const eggs = {
-                    sudo: {
-                        response: "Nice try! 😉 Mais vous pouvez toujours me proposer un poste!",
-                        effect: () => document.body.style.filter = 'hue-rotate(180deg)'
-                    },
-                    konami: {
-                        response: "🚀 Code secret activé! Mode développeur activé!",
-                        effect: () => this.registerPlugin('devTools', (term) => {
-                            term.commands.debug = {
-                                execute: () => console.log(term)
-                            };
-                        })
-                    }
-                };
-                
-                if(eggs[type]) {
-                    eggs[type].effect();
-                    return eggs[type].response;
-                }
-                return "Commande non trouvée";
-            }
-
-            // Commandes réseau simulées
-            async pingHost(host) {
-                const latency = Math.floor(Math.random() * 100) + 20;
-                await this.typeEffect(`Envoi de 4 paquets à ${host || 'google.com'}...\n`);
-                return `Réponse de ${host} - temps=${latency}ms`;
-            }
-
-            async fetchUrl(url) {
-                const mockData = {
-                    'https://api.github.com': '{"user": "johndoe", "repos": 12}',
-                    'https://linkedin.com': '<!DOCTYPE html>...'
-                };
-                return mockData[url] || `Impossible de résoudre ${url}`;
-            }
-
-            // Intégration IA simplifiée
-            async chatGPT(question) {
-                const responses = {
-                    'qui es-tu': 'Je suis un terminal portfolio interactif!',
-                    'conseil sécurité': 'Toujours utiliser MFA et garder les systèmes à jour!',
-                    default: 'Je suis encore en apprentissage 😊 Posez une autre question!'
-                };
-                
-                return Object.entries(responses).find(([key]) => 
-                    question.toLowerCase().includes(key)
-                )?.[1] || responses.default;
-            }
-
-            // Gestion améliorée du terminal
-            async typeEffect(text, speed = 30) {
-                const div = document.createElement('div');
-                this.output.appendChild(div);
-                
-                for (let char of text) {
-                    div.textContent += char;
-                    await new Promise(resolve => setTimeout(resolve, speed));
-                    this.scrollToBottom();
-                }
-            }
-
-            // Initialisation des écouteurs d'événements
-            setupEventListeners() {
-                this.userInput.addEventListener('keydown', this.handleInput.bind(this));
-                
-                // Easter egg Konami Code
-                let konamiCode = [];
-                const secretCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-                window.addEventListener('keydown', (e) => {
-                    konamiCode = [...konamiCode.slice(-9), e.key];
-                    if(konamiCode.join() === secretCode.join()) {
-                        this.addSystemMessage(this.easterEgg('konami'));
-                        konamiCode = [];
-                    }
-                });
-            }
-
-            // ... (autres méthodes restructurées pour supporter les nouvelles fonctionnalités)
+        function openTerminal() {
+            const window = document.getElementById('terminal-window');
+            window.style.display = 'block';
+            bringToFront(window);
+            initTerminal();
         }
 
-        // Initialisation et plugins
-        window.onload = () => {
-            const term = new Terminal();
+        function closeWindow(type) {
+            document.getElementById(`${type}-window`).style.display = 'none';
+        }
+
+        function bringToFront(element) {
+            [...document.querySelectorAll('.window')].forEach(w => 
+                w.style.zIndex = 0
+            );
+            element.style.zIndex = 1;
+        }
+
+        // Système de fenêtres glissantes
+        document.querySelectorAll('.window').forEach(window => {
+            let isDragging = false;
+            let offset = [0,0];
             
-            // Plugin d'extension
-            term.registerPlugin('theme-switcher', (t) => {
-                t.commands.theme = {
-                    desc: 'Change le thème [dark/light/retro]',
-                    execute: (args) => t.changeTheme(args[0])
-                };
+            window.querySelector('.window-header').addEventListener('mousedown', e => {
+                isDragging = true;
+                offset = [
+                    window.offsetLeft - e.clientX,
+                    window.offsetTop - e.clientY
+                ];
+                bringToFront(window);
             });
 
-            // Plugin de métriques
-            term.registerPlugin('stats', (t) => {
-                t.commands.stats = {
-                    execute: () => `Commandes exécutées: ${t.history.length}`
-                };
+            document.addEventListener('mousemove', e => {
+                if (isDragging) {
+                    window.style.left = (e.clientX + offset[0]) + 'px';
+                    window.style.top  = (e.clientY + offset[1]) + 'px';
+                }
             });
-        };
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        });
+
+        // Terminal fonctionnel
+        function initTerminal() {
+            const output = document.getElementById('output');
+            const input = document.getElementById('command-input');
+
+            const commands = {
+                help: () => 'Commandes disponibles: help, clear, cv, projects',
+                clear: () => { output.innerHTML = ''; return ''; },
+                cv: () => window.open('cv.pdf', '_blank'),
+                projects: () => 'Projets:\n- Portfolio (React)\n- Système OS Web'
+            };
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const command = input.value.trim().toLowerCase();
+                    input.value = '';
+                    
+                    let result = 'Commande non reconnue. Tapez "help" pour la liste';
+                    if (commands[command]) {
+                        result = commands[command]();
+                    }
+                    
+                    if (typeof result === 'string') {
+                        output.innerHTML += `C:\\> ${command}\n${result}\n`;
+                        output.scrollTop = output.scrollHeight;
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
