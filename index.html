@@ -12,53 +12,59 @@
             --text-color: #000000;
         }
 
-        /* Style pour la page d'ouverture de session */
-        .login-screen {
-            background-color: #2a2a2a;
-            color: white;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .login-form {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .login-input {
-            margin: 10px 0;
-            padding: 8px;
-            width: 200px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #444;
-            color: white;
-        }
-
-        .login-button {
-            background-color: #008080;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
         /* Bureau */
         body {
             margin: 0;
             height: 100vh;
+            background: var(--desktop-bg) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
             font-family: 'MS Sans Serif', sans-serif;
             overflow: hidden;
             user-select: none;
-            display: none;
         }
 
-        /* Icônes du bureau */
+        /* Écran de connexion */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #2a2a2a;
+            color: white;
+            flex-direction: column;
+        }
+
+        #login-form {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #login-form input {
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            font-size: 16px;
+        }
+
+        #login-form button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #login-form button:hover {
+            background-color: #005757;
+        }
+
+        /* Bureau */
         .desktop-icon {
             position: absolute;
             width: 80px;
@@ -174,48 +180,67 @@
     </style>
 </head>
 <body>
-    <!-- Page de Connexion -->
-    <div id="login-screen" class="login-screen">
-        <div class="login-form">
-            <input id="username" class="login-input" type="text" placeholder="Nom d'utilisateur" />
-            <input id="password" class="login-input" type="password" placeholder="Mot de passe" />
-            <button class="login-button" onclick="login()">Se connecter</button>
+    <!-- Écran de connexion -->
+    <div id="login-screen">
+        <div id="login-form">
+            <h2>Connexion</h2>
+            <input type="text" id="username" placeholder="Nom d'utilisateur">
+            <input type="password" id="password" placeholder="Mot de passe">
+            <button onclick="login()">Se connecter</button>
         </div>
     </div>
 
-    <!-- Bureau -->
-    <div class="desktop-icon" style="left: 20px; top: 20px;" ondblclick="WindowManager.open('terminal')">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABNklEQVRoge2ZMQ6CQBBF/4hWlhYWXoDee/AEXsDKY3gST2Bna2GhhY2JicZkWVhYWBh2Q2A3yLK6A8uGf0JgWfZnZv6fHWBgYGBg+CD8uT5kQcQdgC6AFoAKgCKAxVm0DmAFYAZgQkRjq1xE5PpQxAOAHoDqC3HWAAYAHlY5icj1oYgxgPYbY1cA2kQ0fTcXk4jI9aGICYDGC+OWABpENHOVi4hcH4qY4r6JlwAaRDR3nYuIXB+KmAGo3zC2BNAkoqWvXETk+lDEDEDtYkwJQImI1r5zEZHrQxHnJhYASjEzEZGvG2kOoHr2rAjgSETbEHIRkev1OAJQO/1fALCLlYeIXK/H6D9ERK7XY/QfIiLX6zH6DxGR6/UY/YeIyPV6jP5DROT6A3pS0idBQj1BAAAAAElFTkSuCorMII=" alt="Terminal">
-        Terminal
-    </div>
+    <!-- Bureau (initialement masqué) -->
+    <div id="desktop">
+        <!-- Icônes du bureau -->
+        <div class="desktop-icon" style="left: 20px; top: 20px;" ondblclick="WindowManager.open('terminal')">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABNklEQVRoge2ZMQ6CQBBF/4hWlhYWXoDee/AEXsDKY3gST2Bna2GhhY2JicZkWVhYWBh2Q2A3yLK6A8uGf0JgWfZnZv6fHWBgYGBg+CD8uT5kQcQdgC6AFoAKgCKAxVm0DmAFYAZgQkRjq1xE5PpQxAOAHoDqC3HWAAYAHlY5icj1oYgxgPYbY1cA2kQ0fTcXk4jI9aGICYDGC+OWABpENHOVi4hcH4qY4r6JlwAaRDR3nYuIXB+KmAGo3zC2BNAkoqWvXETk+lDEDEDtYkwJQImI1r5zEZHrQxHnJhYASjEzEZGvG2kOoHr2rAjgSETbEHIRkev1OAJQO/1fALCLlYeIXK/H6D9ERK7XY/QfIiLX6zH6DxGR6/UY/YeIyPV6jP5DROT6A3pS0idBQj1BAAAAAElFTkSuCorMII=" alt="Terminal">
+            Terminal
+        </div>
 
-    <!-- Fenêtre terminal -->
-    <div id="terminal-window" class="window">
-        <div class="window-header">
-            <span>Terminal</span>
-            <div class="window-controls">
-                <button onclick="WindowManager.minimize('terminal')">_</button>
-                <button onclick="WindowManager.close('terminal')">✕</button>
+        <!-- Fenêtre terminal -->
+        <div id="terminal-window" class="window">
+            <div class="window-header">
+                <span>Terminal</span>
+                <div class="window-controls">
+                    <button onclick="WindowManager.minimize('terminal')">_</button>
+                    <button onclick="WindowManager.close('terminal')">✕</button>
+                </div>
+            </div>
+            <div class="terminal-body">
+                <div id="terminal-output"></div>
+                <div class="input-container">
+                    <span style="color: lime;">C:\></span>
+                    <div id="terminal-input" contenteditable="true" class="terminal-input"></div>
+                </div>
             </div>
         </div>
-        <div class="terminal-body">
-            <div id="terminal-output"></div>
-            <div class="input-container">
-                <span style="color: lime;">C:\></span>
-                <div id="terminal-input" contenteditable="true" class="terminal-input"></div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Barre des tâches -->
-    <div id="taskbar">
-        <button class="taskbar-item" onclick="WindowManager.open('terminal')">Terminal</button>
-        <div id="system-tray" style="margin-left: auto; display: flex; gap: 4px;">
-            <div id="clock" class="taskbar-item"></div>
+        <!-- Barre des tâches -->
+        <div id="taskbar">
+            <button class="taskbar-item" onclick="WindowManager.open('terminal')">Terminal</button>
+            <div id="system-tray" style="margin-left: auto; display: flex; gap: 4px;">
+                <div id="clock" class="taskbar-item"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Vérification des informations de connexion
+            if (username === 'admin' && password === 'password') {
+                document.getElementById('login-screen').style.display = 'none';  // Cache l'écran de connexion
+                document.getElementById('desktop').style.display = 'block';     // Affiche le bureau
+                WindowManager.init();
+                WindowManager.open('terminal');
+            } else {
+                alert('Nom d\'utilisateur ou mot de passe incorrect');
+            }
+        }
+
         class WindowManager {
             static windows = {
                 terminal: {
@@ -227,30 +252,11 @@
             };
 
             static init() {
-                // Restaurer l'état depuis localStorage
-                const savedState = localStorage.getItem('windowStates');
-                if(savedState) {
-                    Object.entries(JSON.parse(savedState)).forEach(([id, state]) => {
-                        if(this.windows[id]) {
-                            Object.assign(this.windows[id], state);
-                            this.updateWindow(id);
-                        }
-                    });
-                }
-
-                // Gestionnaire d'événements pour le glisser-déposer
-                document.querySelectorAll('.window-header').forEach(header => {
-                    header.addEventListener('mousedown', e => this.startDrag(e));
-                });
-
                 // Horloge système
                 setInterval(() => {
                     document.getElementById('clock').textContent = 
                         new Date().toLocaleTimeString();
                 }, 1000);
-
-                // Initialiser le terminal
-                Terminal.init();
             }
 
             static open(id) {
@@ -258,13 +264,11 @@
                 win.state = 'open';
                 win.element.style.display = 'block';
                 this.bringToFront(id);
-                this.saveState();
             }
 
             static close(id) {
                 this.windows[id].state = 'closed';
                 this.windows[id].element.style.display = 'none';
-                this.saveState();
             }
 
             static minimize(id) {
@@ -278,161 +282,7 @@
                 const maxZIndex = Math.max(...zIndexes, 0);
                 this.windows[id].element.style.zIndex = maxZIndex + 1;
             }
-
-            static startDrag(e) {
-                const header = e.target.closest('.window-header');
-                const window = header.parentElement;
-                const id = Object.keys(this.windows).find(id => 
-                    this.windows[id].element === window);
-                
-                let offsetX = e.clientX - window.offsetLeft;
-                let offsetY = e.clientY - window.offsetTop;
-
-                const mouseMoveHandler = e => {
-                    window.style.left = `${e.clientX - offsetX}px`;
-                    window.style.top = `${e.clientY - offsetY}px`;
-                };
-
-                const mouseUpHandler = () => {
-                    document.removeEventListener('mousemove', mouseMoveHandler);
-                    document.removeEventListener('mouseup', mouseUpHandler);
-                    this.windows[id].position = {
-                        x: window.offsetLeft,
-                        y: window.offsetTop
-                    };
-                    this.saveState();
-                };
-
-                document.addEventListener('mousemove', mouseMoveHandler);
-                document.addEventListener('mouseup', mouseUpHandler);
-                this.bringToFront(id);
-            }
-
-            static updateWindow(id) {
-                const win = this.windows[id];
-                win.element.style.left = `${win.position.x}px`;
-                win.element.style.top = `${win.position.y}px`;
-                win.element.style.width = `${win.size.width}px`;
-                win.element.style.height = `${win.size.height}px`;
-            }
-
-            static saveState() {
-                const state = Object.fromEntries(
-                    Object.entries(this.windows).map(([id, win]) => [
-                        id, 
-                        { position: win.position, size: win.size, state: win.state }
-                    ])
-                );
-                localStorage.setItem('windowStates', JSON.stringify(state));
-            }
         }
-
-        class Terminal {
-            static init() {
-                this.output = document.getElementById('terminal-output');
-                this.input = document.getElementById('terminal-input');
-                this.history = [];
-                this.historyIndex = -1;
-
-                this.commands = {
-                    help: () => this.print('Commandes disponibles:<br>help, clear, cv, projects, theme [win98/mac/linux]'),
-                    clear: () => this.output.innerHTML = '',
-                    cv: () => window.open('cv.pdf'),
-                    theme: (args) => this.changeTheme(args[0]),
-                    projects: () => this.print('Projets:<br>- Portfolio (React/Node.js)<br>- Système OS Web<br>- Outil d\'analyse de sécurité')
-                };
-
-                this.input.addEventListener('keydown', e => {
-                    if(e.key === 'Enter') {
-                        e.preventDefault();
-                        this.processCommand(this.input.textContent.trim());
-                        this.input.textContent = '';
-                    } else if(e.key === 'ArrowUp') {
-                        this.recallHistory(-1);
-                    } else if(e.key === 'ArrowDown') {
-                        this.recallHistory(1);
-                    }
-                });
-            }
-
-            static processCommand(cmd) {
-                this.print(`C:\\> ${cmd}`, 'input');
-                const [command, ...args] = cmd.split(' ');
-                
-                if(this.commands[command]) {
-                    const result = this.commands[command](args);
-                    if(result) this.print(result.toString());
-                } else {
-                    this.print(`Commande non reconnue: ${command}`, 'error');
-                }
-                
-                this.history.push(cmd);
-                this.historyIndex = this.history.length;
-            }
-
-            static print(text, type = 'output') {
-                const div = document.createElement('div');
-                div.className = type;
-                div.innerHTML = text;
-                this.output.appendChild(div);
-                this.output.scrollTop = this.output.scrollHeight;
-            }
-
-            static recallHistory(direction) {
-                if(this.history.length === 0) return;
-                this.historyIndex = Math.max(0, Math.min(this.history.length - 1, this.historyIndex + direction));
-                this.input.textContent = this.history[this.historyIndex];
-            }
-
-            static changeTheme(theme) {
-                const themes = {
-                    win98: {
-                        '--desktop-bg': '#008080',
-                        '--taskbar-bg': '#c0c0c0',
-                        '--window-bg': '#c0c0c0'
-                    },
-                    mac: {
-                        '--desktop-bg': '#2a2a2a',
-                        '--taskbar-bg': '#404040',
-                        '--window-bg': '#f0f0f0'
-                    },
-                    linux: {
-                        '--desktop-bg': '#3f3f3f',
-                        '--taskbar-bg': '#2f2f2f',
-                        '--window-bg': '#4a4a4a'
-                    }
-                };
-
-                if(themes[theme]) {
-                    Object.entries(themes[theme]).forEach(([varName, value]) => {
-                        document.documentElement.style.setProperty(varName, value);
-                    });
-                    this.print(`Thème changé pour ${theme}`);
-                } else {
-                    this.print('Thèmes disponibles: win98, mac, linux', 'error');
-                }
-            }
-        }
-
-        // Fonction pour la page de login
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if(username === 'admin' && password === 'admin') {
-                // Connexion réussie
-                document.getElementById('login-screen').style.display = 'none';
-                document.body.style.display = 'block';
-                WindowManager.init();
-                WindowManager.open('terminal');
-            } else {
-                alert('Nom d\'utilisateur ou mot de passe incorrect !');
-            }
-        }
-
-        // Initialisation au chargement
-        window.onload = () => {
-            document.body.style.display = 'none';  // Masquer la page principale au début
-        };
     </script>
 </body>
 </html>
