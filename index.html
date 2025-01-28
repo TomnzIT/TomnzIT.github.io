@@ -12,14 +12,50 @@
             --text-color: #000000;
         }
 
+        /* Style pour la page d'ouverture de session */
+        .login-screen {
+            background-color: #2a2a2a;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .login-form {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .login-input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #444;
+            color: white;
+        }
+
+        .login-button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
         /* Bureau */
         body {
             margin: 0;
             height: 100vh;
-            background: var(--desktop-bg) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
             font-family: 'MS Sans Serif', sans-serif;
             overflow: hidden;
             user-select: none;
+            display: none;
         }
 
         /* Icônes du bureau */
@@ -54,6 +90,7 @@
             resize: both;
             overflow: hidden;
             transition: all 0.3s;
+            display: none;
         }
 
         .window-header {
@@ -137,15 +174,19 @@
     </style>
 </head>
 <body>
+    <!-- Page de Connexion -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-form">
+            <input id="username" class="login-input" type="text" placeholder="Nom d'utilisateur" />
+            <input id="password" class="login-input" type="password" placeholder="Mot de passe" />
+            <button class="login-button" onclick="login()">Se connecter</button>
+        </div>
+    </div>
+
     <!-- Bureau -->
     <div class="desktop-icon" style="left: 20px; top: 20px;" ondblclick="WindowManager.open('terminal')">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABNklEQVRoge2ZMQ6CQBBF/4hWlhYWXoDee/AEXsDKY3gST2Bna2GhhY2JicZkWVhYWBh2Q2A3yLK6A8uGf0JgWfZnZv6fHWBgYGBg+CD8uT5kQcQdgC6AFoAKgCKAxVm0DmAFYAZgQkRjq1xE5PpQxAOAHoDqC3HWAAYAHlY5icj1oYgxgPYbY1cA2kQ0fTcXk4jI9aGICYDGC+OWABpENHOVi4hcH4qY4r6JlwAaRDR3nYuIXB+KmAGo3zC2BNAkoqWvXETk+lDEDEDtYkwJQImI1r5zEZHrQxHnJhYASjEzEZGvG2kOoHr2rAjgSETbEHIRkev1OAJQO/1fALCLlYeIXK/H6D9ERK7XY/QfIiLX6zH6DxGR6/UY/YeIyPV6jP5DROT6A3pS0idBQj1BAAAAAElFTkSuCorMII=" alt="Terminal">
         Terminal
-    </div>
-
-    <div class="desktop-icon" style="left: 20px; top: 120px;" ondblclick="window.open('cv.pdf')">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABJ0lEQVRoge2ZvQ6CQBBFz0ZjiYWFhRfwBd7AE3gCS5/Ak3gCO1sLCy1sTEw0JsvCwsLCsBsCu0GW1R1YNvwTAsuyPzPz3wzA4XA4nD/EP9cHXRDxAKAHoAGgDKAAYHEWrQNYAZgCmBDRyConEbk+FDEG0AdQeSHOBsAYwN0qJxG5PhQxBdA+4fQaQIeI5u/mYhIRuT4UMQPQfCHMFkCHiBauchGR60MRMwD1J8bsAHSIaOEqFxG5PhQxA1C7GFMCUCaija9cROT6UMS5iQWAUsxMRORrRVoAqJ09KwG4EdEuhFxE5Ho9jgHUj/8XAOxi5SEi1+sx+g8Rkev1GP2HiMj1eoz+Q0Tkej1G/yEicr0eo/8QEbn+gJ6U9EmQUE+QAAAAAElFTkSuCorMII=" alt="CV">
-        Mon CV.pdf
     </div>
 
     <!-- Fenêtre terminal -->
@@ -373,10 +414,24 @@
             }
         }
 
+        // Fonction pour la page de login
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if(username === 'admin' && password === 'admin') {
+                // Connexion réussie
+                document.getElementById('login-screen').style.display = 'none';
+                document.body.style.display = 'block';
+                WindowManager.init();
+                WindowManager.open('terminal');
+            } else {
+                alert('Nom d\'utilisateur ou mot de passe incorrect !');
+            }
+        }
+
         // Initialisation au chargement
         window.onload = () => {
-            WindowManager.init();
-            WindowManager.open('terminal');
+            document.body.style.display = 'none';  // Masquer la page principale au début
         };
     </script>
 </body>
