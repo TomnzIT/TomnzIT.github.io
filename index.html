@@ -481,9 +481,9 @@
     </div>
 
     <script>
+        let zIndex = 1000; // Doit être en tête des déclarations
         let commandHistory = [];
         let historyIndex = -1;
-        let zIndex = 1000;
 
         const commands = {
             help: () => `Available commands:
@@ -533,17 +533,19 @@
         }
 
         function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.remove(), 3000);
+         const notification = document.createElement('div');
+         notification.className = `notification ${type}`;
+         notification.textContent = message;
+         document.body.appendChild(notification);
+    
+         setTimeout(() => notification.remove(), 3000);
+        } // Accolade manquante ajoutée ici
 
         function bringToFront(element) {
-            zIndex++;
-            element.style.zIndex = zIndex;
+         zIndex++;
+         element.style.zIndex = zIndex;
         }
+
 
         function openApp(appId) {
             const app = document.getElementById(appId);
@@ -737,15 +739,13 @@
             
             document.body.appendChild(startMenu);
             
-            // Close menu when clicking outside
-            setTimeout(() => {
-                document.addEventListener('click', (e) => {
-                    if(!e.target.closest('#start-menu') && !e.target.closest('.start-menu')) {
-                        startMenu.remove();
-                    }
-                }, { once: true });
-            });
-        }
+                // Remplacer le setTimeout par
+            document.addEventListener('click', (e) => {
+             if(!e.target.closest('#start-menu') && !e.target.closest('.start-menu')) {
+              startMenu.remove();
+             }
+           });
+
     </script>
 </body>
 </html>
