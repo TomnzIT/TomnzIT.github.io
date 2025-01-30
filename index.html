@@ -739,12 +739,16 @@
             
             document.body.appendChild(startMenu);
             
-                // Remplacer le setTimeout par
-            document.addEventListener('click', (e) => {
-             if(!e.target.closest('#start-menu') && !e.target.closest('.start-menu')) {
-              startMenu.remove();
-             }
-           });
+            // Gestionnaire de fermeture amélioré
+            const clickHandler = (e) => {
+                if(!startMenu.contains(e.target) && !e.target.closest('.start-menu')) {
+                    startMenu.remove();
+                    document.removeEventListener('click', clickHandler);
+                }
+            };
+            
+            document.addEventListener('click', clickHandler);
+        }
 
     </script>
 </body>
