@@ -539,3 +539,213 @@
             document.body.appendChild(notification);
             
             setTimeout(() => notification.remove(), 3000);
+
+        function bringToFront(element) {
+            zIndex++;
+            element.style.zIndex = zIndex;
+        }
+
+        function openApp(appId) {
+            const app = document.getElementById(appId);
+            if(app) {
+                app.style.display = 'block';
+                bringToFront(app);
+            }
+        }
+
+        function closeApp(appId) {
+            const app = document.getElementById(appId);
+            if(app) app.style.display = 'none';
+        }
+
+        function minimizeApp(appId) {
+            const app = document.getElementById(appId);
+            app.style.transform = 'translateY(100vh)';
+        }
+
+        function toggleMaximize(appId) {
+            const app = document.getElementById(appId);
+            app.classList.toggle('maximized');
+            app.style.width = app.classList.contains('maximized') 
+                ? 'calc(100% - 20px)' 
+                : '700px';
+            app.style.height = app.classList.contains('maximized')
+                ? 'calc(100vh - 80px)'
+                : '450px';
+        }
+
+        // Terminal command history
+        document.getElementById('terminal-input').addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowUp' && commandHistory.length > 0) {
+                historyIndex = Math.max(historyIndex - 1, 0);
+                e.target.value = commandHistory[historyIndex];
+            }
+            if(e.key === 'ArrowDown' && commandHistory.length > 0) {
+                historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+                e.target.value = commandHistory[historyIndex] || '';
+            }
+        });
+
+        // Theme management
+        function loadUserPreferences() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            applyTheme(theme);
+        }
+
+        function applyTheme(themeName) {
+            const themes = {
+                dark: {
+                    '--primary-color': '#007acc',
+                    '--background-color': '#1a1a1a',
+                    '--text-color': '#ffffff'
+                },
+                light: {
+                    '--primary-color': '#1a73e8',
+                    '--background-color': '#f5f5f5',
+                    '--text-color': '#2d2d2d'
+                },
+                cyberpunk: {
+                    '--primary-color': '#ff003c',
+                    '--background-color': '#000',
+                    '--text-color': '#0ff'
+                }
+            };
+
+            Object.entries(themes[themeName]).forEach(([key, value]) => {
+                document.documentElement.style.setProperty(key, value);
+            });
+            localStorage.setItem('theme', themeName);
+        }
+
+        // Settings tabs
+        function showSettingsTab(tabId) {
+            const tabs = {
+                general: `
+                    <h3>General Settings</h3>
+                    <label><input type="checkbox"> Enable animations</label>
+                `,
+                themes: `
+                    <h3>Themes</h3>
+                    <div class="theme-selector">
+                        <div class="theme-option dark" onclick="applyTheme('dark')">Dark</div>
+                        <div class="theme-option light" onclick="applyTheme('light')">Light</div>
+                        <div class="theme-option cyberpunk" onclick="applyTheme('cyberpunk')">Cyberpunk</div>
+                    </div>
+                `,
+                security: `
+                    <h3>Security</h3>
+                    <label>
+                        Change password:
+                        <input type="password" class="modern-input">
+                    </label>
+                `
+            };
+            document.getElementById('settings-content').innerHTML = tabs[tabId];
+        }
+
+        // System status
+        function checkSystemStatus() {
+            setInterval(() => {
+                const statusElement = document.getElementById('system-status');
+                statusElement.textContent = navigator.onLine ? '🛜 Online' : '⚠️ Offline';
+            }, 5000);
+        }
+
+        // Initialize desktop
+        function initializeDesktop() {
+            setInterval(() => {
+                document.getElementById('taskbar-clock').textContent = 
+                    new Date().toLocaleTimeString();
+            }, 1000);
+
+            checkSystemStatus();
+            
+            // Make all windows draggable
+            document.querySelectorAll('.app-window').forEach(window => {
+                makeDraggable(window);
+            });
+
+            // Terminal input handler
+            document.getElementById('terminal-input').addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') {
+                    const input = e.target.value.trim();
+                    const output = document.getElementById('terminal-output');
+                    
+                    output.innerHTML += `<div>guest@webos:~$ ${input}</div>`;
+                    
+                    const args = input.split(' ');
+                    const cmd = args[0];
+                    const result = commands[cmd] 
+                        ? commands[cmd](args[1]) 
+                        : `Command not found: ${cmd}`;
+                    
+                    output.innerHTML += `<div>${result}</div>`;
+                    e.target.value = '';
+                    output.scrollTop = output.scrollHeight;
+                    
+                    commandHistory.push(input);
+                    historyIndex = commandHistory.length;
+                }
+            });
+        }
+
+        // Draggable windows implementation
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offset = { x: 0, y: 0 };
+
+            element.querySelector('.window-header').addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offset = {
+                    x: e.clientX - element.offsetLeft,
+                    y: e.clientY - element.offsetTop
+                };
+                bringToFront(element);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if(isDragging) {
+                    element.style.left = `${e.clientX - offset.x}px`;
+                    element.style.top = `${e.clientY - offset.y}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        // Start menu functionality
+        function toggleStartMenu() {
+            const startMenu = document.createElement('div');
+            startMenu.id = 'start-menu';
+            startMenu.style.position = 'absolute';
+            startMenu.style.bottom = '60px';
+            startMenu.style.left = '20px';
+            startMenu.style.background = 'rgba(40, 40, 40, 0.95)';
+            startMenu.style.backdropFilter = 'blur(10px)';
+            startMenu.style.padding = '20px';
+            startMenu.style.borderRadius = '10px';
+            startMenu.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+            startMenu.innerHTML = `
+                <div class="start-menu-item" onclick="openApp('about')">About Me</div>
+                <div class="start-menu-item" onclick="openApp('projects')">Projects</div>
+                <div class="start-menu-item" onclick="openApp('settings')">Settings</div>
+                <hr>
+                <div class="start-menu-item" onclick="location.reload()">Log Out</div>
+            `;
+            
+            document.body.appendChild(startMenu);
+            
+            // Close menu when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', (e) => {
+                    if(!e.target.closest('#start-menu') && !e.target.closest('.start-menu')) {
+                        startMenu.remove();
+                    }
+                }, { once: true });
+            });
+        }
+    </script>
+</body>
+</html>
