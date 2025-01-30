@@ -1,310 +1,223 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebOS Portfolio</title>
+    <title>WebOS</title>
     <style>
-        :root {
-            --desktop-bg: #008080 url('wallpaper.jpg');
-            --taskbar-bg: #c0c0c0;
-            --window-bg: #c0c0c0;
-            --text-color: #000000;
-        }
-
-        /* Écran de boot */
-        .boot-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .boot-loader {
-            width: 200px;
-            height: 4px;
-            background: #333;
-            margin: 20px;
+        /* General Styles */
+        body {
+            margin: 0;
             overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
-        .boot-progress {
-            width: 0%;
-            height: 100%;
-            background: #fff;
-            transition: width 2s;
-        }
-
-        /* Écran de connexion */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--desktop-bg);
-            display: none;
-            align-items: center;
+        /* Boot Screen */
+        #boot-screen {
+            display: flex;
             justify-content: center;
-            z-index: 999;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-size: 24px;
         }
 
-        .login-box {
-            background: var(--window-bg);
-            padding: 20px;
-            border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            text-align: center;
+        /* Login Page */
+        #login-container {
+            display: none;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
         .post-it {
             position: absolute;
-            top: 50px;
-            right: 50px;
-            background: #ff9;
-            padding: 20px;
-            transform: rotate(5deg);
-            font-family: 'Comic Sans MS', cursive;
-        }
-
-        /* Ajouts pour le nouvel explorateur de fichiers */
-        .file-explorer {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 100px);
-            gap: 10px;
+            top: 20px;
+            right: 20px;
+            background-color: #ffff99;
             padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
         }
-
-        .file-item {
+        .login-box {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             text-align: center;
-            padding: 5px;
+        }
+        input[type="text"], input[type="password"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 200px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
-
-        .file-item:hover {
-            background: rgba(0,0,0,0.1);
+        button:hover {
+            background-color: #005f99;
         }
 
-        /* Ajout pour le navigateur web */
-        .web-browser iframe {
-            width: 100%;
-            height: calc(100% - 40px);
-            border: none;
+        /* Desktop */
+        #desktop {
+            display: none;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
         }
-
-        /* Ajout pour le bloc-notes */
-        .notepad-textarea {
+        #wallpaper {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: calc(100% - 40px);
-            border: none;
-            resize: none;
-            font-family: 'Courier New', monospace;
+            height: 100%;
+            z-index: -1;
+        }
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+        }
+        .taskbar-item {
             padding: 10px;
+            cursor: pointer;
+        }
+        .taskbar-item:hover {
+            background-color: #555;
+        }
+
+        /* Apps */
+        .app {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        iframe {
+            width: 800px;
+            height: 600px;
+            border: none;
+        }
+        textarea {
+            width: 800px;
+            height: 600px;
         }
     </style>
 </head>
 <body>
-    <!-- Écran de boot -->
-    <div class="boot-screen">
-        <div class="boot-loader">
-            <div class="boot-progress"></div>
-        </div>
-        <div>Chargement du système...</div>
+
+    <!-- Boot Screen -->
+    <div id="boot-screen">
+        <h1>Booting WebOS...</h1>
     </div>
 
-    <!-- Écran de connexion -->
-    <div class="login-screen">
+    <!-- Login Page -->
+    <div id="login-container">
         <div class="post-it">
-            <h3>Identifiants</h3>
-            <p>User: guest</p>
-            <p>Password: password123</p>
+            Username: user<br>
+            Password: pass123
         </div>
         <div class="login-box">
-            <img src="user-icon.png" alt="User" width="80">
-            <div style="margin: 15px 0;">
-                <input type="text" id="username" placeholder="Nom d'utilisateur" style="margin: 5px;"><br>
-                <input type="password" id="password" placeholder="Mot de passe" style="margin: 5px;">
-            </div>
-            <button onclick="System.login()">Connexion</button>
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
         </div>
     </div>
 
-    <!-- Nouveaux éléments -->
-    <div id="context-menu" class="context-menu" style="display: none;">
-        <div class="context-menu-item" onclick="FileManager.openWallpaperPicker()">Changer le fond d'écran</div>
-        <div class="context-menu-item" onclick="WindowManager.open('explorer')">Ouvrir l'explorateur</div>
-    </div>
+    <!-- Desktop -->
+    <div id="desktop">
+        <img id="wallpaper" src="https://via.placeholder.com/1920x1080" alt="Wallpaper">
 
-    <!-- Fenêtre explorateur de fichiers -->
-    <div id="explorer-window" class="window">
-        <div class="window-header">
-            <span>Explorateur de fichiers</span>
-            <div class="window-controls">
-                <button onclick="WindowManager.minimize('explorer')">_</button>
-                <button onclick="WindowManager.close('explorer')">✕</button>
-            </div>
+        <!-- Taskbar -->
+        <div id="taskbar">
+            <div class="taskbar-item" onclick="openApp('explorer')">Explorer</div>
+            <div class="taskbar-item" onclick="openApp('browser')">Browser</div>
+            <div class="taskbar-item" onclick="openApp('notepad')">Notepad</div>
+            <div class="taskbar-item" onclick="changeWallpaper()">Change Wallpaper</div>
         </div>
-        <div class="file-explorer">
-            <!-- Les fichiers seront générés dynamiquement -->
-        </div>
-    </div>
 
-    <!-- Fenêtre navigateur web -->
-    <div id="browser-window" class="window">
-        <div class="window-header">
-            <span>Navigateur Web</span>
-            <div class="window-controls">
-                <button onclick="WindowManager.minimize('browser')">_</button>
-                <button onclick="WindowManager.close('browser')">✕</button>
-            </div>
+        <!-- Apps -->
+        <div id="explorer" class="app">
+            <h3>File Explorer</h3>
+            <ul>
+                <li>Documents</li>
+                <li>Pictures</li>
+                <li>Music</li>
+            </ul>
         </div>
-        <div style="padding: 10px;">
-            <input type="text" id="url-bar" style="width: 80%">
-            <button onclick="Browser.navigate()">Aller</button>
+        <div id="browser" class="app">
+            <iframe src="https://www.google.com"></iframe>
         </div>
-        <iframe id="browser-frame"></iframe>
-    </div>
-
-    <!-- Fenêtre bloc-notes -->
-    <div id="notepad-window" class="window">
-        <div class="window-header">
-            <span>Bloc-notes</span>
-            <div class="window-controls">
-                <button onclick="WindowManager.minimize('notepad')">_</button>
-                <button onclick="WindowManager.close('notepad')">✕</button>
-            </div>
+        <div id="notepad" class="app">
+            <textarea placeholder="Type here..."></textarea>
         </div>
-        <textarea class="notepad-textarea"></textarea>
     </div>
 
     <script>
-        // Nouveau système de gestion globale
-        class System {
-            static init() {
-                // Simulation du processus de boot
-                document.querySelector('.boot-progress').style.width = '100%';
-                setTimeout(() => {
-                    document.querySelector('.boot-screen').style.display = 'none';
-                    document.querySelector('.login-screen').style.display = 'flex';
-                }, 2000);
-            }
+        // Show boot screen for 3 seconds
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+        }, 3000);
 
-            static login() {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                if(username === 'guest' && password === 'password123') {
-                    document.querySelector('.login-screen').style.display = 'none';
-                    WindowManager.init();
-                    FileManager.init();
-                    Browser.init();
-                } else {
-                    alert('Identifiants incorrects !');
-                }
+        // Login Functionality
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'user' && password === 'pass123') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('desktop').style.display = 'block';
+            } else {
+                alert('Invalid credentials');
             }
         }
 
-        // Gestionnaire de fichiers amélioré
-        class FileManager {
-            static files = {
-                'Documents': {
-                    'CV.pdf': {type: 'pdf', icon: 'cv-icon.png'},
-                    'Projets.txt': {type: 'text', icon: 'text-icon.png'}
-                },
-                'Images': {
-                    'wallpaper.jpg': {type: 'image', icon: 'image-icon.png'}
-                }
-            };
-
-            static init() {
-                // Gestion du clic droit
-                document.body.oncontextmenu = e => {
-                    e.preventDefault();
-                    const menu = document.getElementById('context-menu');
-                    menu.style.display = 'block';
-                    menu.style.left = `${e.pageX}px`;
-                    menu.style.top = `${e.pageY}px`;
-                };
-
-                // Fermeture du menu contextuel
-                document.body.onclick = () => {
-                    document.getElementById('context-menu').style.display = 'none';
-                };
-            }
-
-            static openWallpaperPicker() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = e => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        document.body.style.backgroundImage = `url(${reader.result})`;
-                    };
-                    reader.readAsDataURL(file);
-                };
-                input.click();
+        // Open Apps
+        function openApp(appName) {
+            const app = document.getElementById(appName);
+            if (app.style.display === 'none') {
+                app.style.display = 'block';
+            } else {
+                app.style.display = 'none';
             }
         }
 
-        // Navigateur web
-        class Browser {
-            static init() {
-                document.getElementById('url-bar').addEventListener('keypress', e => {
-                    if(e.key === 'Enter') this.navigate();
-                });
-            }
-
-            static navigate() {
-                const url = document.getElementById('url-bar').value;
-                const frame = document.getElementById('browser-frame');
-                frame.src = url.startsWith('http') ? url : `https://${url}`;
-            }
+        // Change Wallpaper
+        function changeWallpaper() {
+            const wallpapers = [
+                "https://via.placeholder.com/1920x1080/FF5733",
+                "https://via.placeholder.com/1920x1080/33FF57",
+                "https://via.placeholder.com/1920x1080/3357FF"
+            ];
+            const currentWallpaper = document.getElementById('wallpaper');
+            const randomIndex = Math.floor(Math.random() * wallpapers.length);
+            currentWallpaper.src = wallpapers[randomIndex];
         }
-
-        // Mise à jour du WindowManager
-        WindowManager.windows = {
-            ...WindowManager.windows,
-            explorer: {
-                element: document.getElementById('explorer-window'),
-                state: 'closed',
-                position: { x: 200, y: 200 },
-                size: { width: 600, height: 400 }
-            },
-            browser: {
-                element: document.getElementById('browser-window'),
-                state: 'closed',
-                position: { x: 300, y: 300 },
-                size: { width: 800, height: 600 }
-            },
-            notepad: {
-                element: document.getElementById('notepad-window'),
-                state: 'closed',
-                position: { x: 400, y: 400 },
-                size: { width: 500, height: 400 }
-            }
-        };
-
-        // Ajout de commandes au terminal
-        Terminal.commands = {
-            ...Terminal.commands,
-            explorer: () => WindowManager.open('explorer'),
-            browser: () => WindowManager.open('browser'),
-            notepad: () => WindowManager.open('notepad'),
-            wall: () => FileManager.openWallpaperPicker()
-        };
-
-        // Initialisation du système
-        window.onload = System.init;
     </script>
+
 </body>
 </html>
