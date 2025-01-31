@@ -1,3 +1,4 @@
+<!-- Put code here -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,6 @@
             --error-color: #ff4444;
         }
 
-        /* Base styles */
         body {
             margin: 0;
             overflow: hidden;
@@ -24,7 +24,7 @@
             touch-action: none;
         }
 
-        /* Boot screen */
+        /* Boot screen styles */
         #boot-screen {
             display: flex;
             flex-direction: column;
@@ -41,23 +41,7 @@
             z-index: 1000;
         }
 
-        .loading-bar {
-            width: 300px;
-            height: 4px;
-            background-color: #333;
-            margin-top: 20px;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .loading-progress {
-            width: 0%;
-            height: 100%;
-            background-color: white;
-            transition: width 3s linear;
-        }
-
-        /* Login screen */
+        /* Login container styles */
         #login-container {
             display: none;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -66,17 +50,7 @@
             align-items: center;
         }
 
-        .login-box {
-            background-color: rgba(30, 30, 30, 0.95);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
-            text-align: center;
-            width: 350px;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Desktop environment */
+        /* Desktop environment styles */
         #desktop {
             display: none;
             position: relative;
@@ -99,64 +73,12 @@
             transition: transform 0.3s ease-out;
         }
 
-        .window-header {
-            background-color: #252525;
-            color: white;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-            user-select: none;
-        }
-
-        .window-content {
-            padding: 20px;
-            height: calc(100% - 48px);
-            overflow: auto;
-            color: #ddd;
-        }
-
-        /* Enhanced Terminal */
+        /* Terminal specific styles */
         #terminal {
             font-family: 'Fira Code', monospace;
         }
 
-        .terminal-output div {
-            margin: 5px 0;
-            white-space: pre-wrap;
-        }
-
-        /* New Application Styles */
-        .calculator {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            padding: 10px;
-        }
-
-        .calculator-display {
-            grid-column: span 4;
-            background: #1a1a1a;
-            padding: 10px;
-            text-align: right;
-            font-size: 1.5em;
-            border-radius: 4px;
-        }
-
-        .music-player {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .playlist {
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        /* System Notifications */
+        /* Notification center styles */
         .notification-center {
             position: fixed;
             right: 20px;
@@ -171,7 +93,7 @@
             display: none;
         }
 
-        /* Context Menu */
+        /* Context menu styles */
         .context-menu {
             position: fixed;
             background: rgba(50, 50, 50, 0.95);
@@ -182,26 +104,10 @@
             display: none;
         }
 
-        .context-menu-item {
-            padding: 8px 20px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .context-menu-item:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
         /* Animations */
         @keyframes windowEntry {
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes floating {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
         }
     </style>
 </head>
@@ -235,65 +141,37 @@
     <div id="desktop">
         <!-- Desktop Icons -->
         <div class="desktop-icons">
-            <!-- Existing icons... -->
-            <div class="desktop-icon" onclick="openApp('calculator')">
-                <div class="icon-image">🧮</div>
-                <span>Calculator</span>
+            <div class="desktop-icon" onclick="openApp('about')">
+                <div class="icon-image">📁</div>
+                <span>About Me</span>
             </div>
-            <div class="desktop-icon" onclick="openApp('music')">
-                <div class="icon-image">🎵</div>
-                <span>Music Player</span>
+            <div class="desktop-icon" onclick="openApp('projects')">
+                <div class="icon-image">💼</div>
+                <span>Projects</span>
             </div>
-        </div>
-
-        <!-- New Applications -->
-        <div id="calculator" class="app-window" style="width: 300px; height: 400px;">
-            <div class="window-header">
-                <span>Calculator</span>
-                <div class="terminal-controls">
-                    <div class="terminal-button close-button" onclick="closeApp('calculator')"></div>
-                </div>
+            <div class="desktop-icon" onclick="openApp('terminal')">
+                <div class="icon-image">⌨️</div>
+                <span>Terminal</span>
             </div>
-            <div class="window-content">
-                <div class="calculator">
-                    <div class="calculator-display" id="calc-display">0</div>
-                    <button class="modern-button" onclick="clearDisplay()">C</button>
-                    <button class="modern-button" onclick="appendToDisplay('±')">±</button>
-                    <button class="modern-button" onclick="appendToDisplay('%')">%</button>
-                    <button class="modern-button" onclick="appendToDisplay('/')">÷</button>
-                    <button class="modern-button" onclick="appendToDisplay('7')">7</button>
-                    <button class="modern-button" onclick="appendToDisplay('8')">8</button>
-                    <button class="modern-button" onclick="appendToDisplay('9')">9</button>
-                    <button class="modern-button" onclick="appendToDisplay('*')">×</button>
-                    <button class="modern-button" onclick="appendToDisplay('4')">4</button>
-                    <button class="modern-button" onclick="appendToDisplay('5')">5</button>
-                    <button class="modern-button" onclick="appendToDisplay('6')">6</button>
-                    <button class="modern-button" onclick="appendToDisplay('-')">−</button>
-                    <button class="modern-button" onclick="appendToDisplay('1')">1</button>
-                    <button class="modern-button" onclick="appendToDisplay('2')">2</button>
-                    <button class="modern-button" onclick="appendToDisplay('3')">3</button>
-                    <button class="modern-button" onclick="appendToDisplay('+')">+</button>
-                    <button class="modern-button" onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
-                    <button class="modern-button" onclick="appendToDisplay('.')">.</button>
-                    <button class="modern-button" onclick="calculate()">=</button>
-                </div>
+            <div class="desktop-icon" onclick="openApp('settings')">
+                <div class="icon-image">⚙️</div>
+                <span>Settings</span>
             </div>
         </div>
 
-        <div id="music" class="app-window" style="width: 400px; height: 500px;">
+        <!-- Terminal Window -->
+        <div id="terminal" class="app-window">
             <div class="window-header">
-                <span>Music Player</span>
+                <span>Terminal</span>
                 <div class="terminal-controls">
-                    <div class="terminal-button close-button" onclick="closeApp('music')"></div>
+                    <div class="terminal-button close-button" onclick="closeApp('terminal')"></div>
                 </div>
             </div>
             <div class="window-content">
-                <div class="music-player">
-                    <audio id="audio-player" controls></audio>
-                    <div class="playlist">
-                        <div class="playlist-item" onclick="playTrack('demo')">Demo Track 1</div>
-                        <div class="playlist-item" onclick="playTrack('demo2')">Demo Track 2</div>
-                    </div>
+                <div id="terminal-output"></div>
+                <div class="terminal-input-line">
+                    <span class="prompt">guest@webos:~$</span>
+                    <input type="text" class="terminal-input" id="terminal-input" autocomplete="off">
                 </div>
             </div>
         </div>
@@ -321,177 +199,124 @@
     </div>
 
     <script>
-        // Enhanced System Constants
-        const SYSTEM = {
-            VERSION: 'WebOS 2.1',
-            DEVELOPER: 'John Doe',
-            SESSION_TIMEOUT: 900000 // 15 minutes
+        // System Configuration
+        const SYSTEM_CONFIG = {
+            version: "2.1.0",
+            sessionTimeout: 900000, // 15 minutes
+            defaultTheme: "dark",
+            enableAnimations: true
         };
 
-        // Enhanced Window Management
-        class WindowManager {
-            constructor() {
-                this.windows = new Map();
-                this.zIndex = 1000;
-            }
-
-            open(appId) {
+        // Window Management
+        let zIndex = 1000;
+        const windowManager = {
+            open: (appId) => {
                 const app = document.getElementById(appId);
                 if(app) {
                     app.style.display = 'block';
-                    this.bringToFront(app);
-                    app.style.animation = 'windowEntry 0.3s ease-out';
+                    zIndex++;
+                    app.style.zIndex = zIndex;
+                    if(SYSTEM_CONFIG.enableAnimations) {
+                        app.style.animation = 'windowEntry 0.3s ease-out';
+                    }
+                }
+            },
+            close: (appId) => {
+                const app = document.getElementById(appId);
+                if(app) app.style.display = 'none';
+            }
+        };
+
+        // Terminal System
+        const terminal = {
+            history: [],
+            execute: (command) => {
+                const args = command.split(' ');
+                const cmd = args[0];
+                const output = document.getElementById('terminal-output');
+                
+                switch(cmd) {
+                    case 'help':
+                        return `Available commands:
+                            help - Show this help
+                            clear - Clear terminal
+                            about - System info
+                            theme [name] - Change theme
+                            time - Show time
+                            date - Show date`;
+                    
+                    case 'clear':
+                        output.innerHTML = '';
+                        break;
+                        
+                    case 'theme':
+                        const theme = args[1];
+                        applyTheme(theme);
+                        return `Theme changed to ${theme}`;
+                        
+                    default:
+                        return `Command not found: ${cmd}`;
                 }
             }
-
-            bringToFront(element) {
-                this.zIndex++;
-                element.style.zIndex = this.zIndex;
-            }
-
-            // Add more window management methods...
-        }
-
-        // System Initialization
-        const windowManager = new WindowManager();
-
-        // Enhanced Terminal Commands
-        const commands = {
-            help: () => `Available commands:
-                        help - Show this help
-                        clear - Clear terminal
-                        about - About me
-                        projects - List projects
-                        theme [name] - Change theme
-                        time - Show system time
-                        calc [expression] - Calculator
-                        weather - Get weather info`,
-            
-            clear: () => terminalOutput.innerHTML = '',
-            about: () => `${SYSTEM.DEVELOPER} - ${SYSTEM.VERSION}`,
-            theme: (arg) => applyTheme(arg),
-            time: () => new Date().toLocaleTimeString(),
-            weather: () => fetchWeather(),
-            calc: (expr) => eval(expr) || 'Invalid expression'
         };
 
-        // Enhanced Calculator Logic
-        let currentCalculation = '0';
-
-        function appendToDisplay(value) {
-            if(currentCalculation === '0') currentCalculation = '';
-            currentCalculation += value;
-            updateDisplay();
-        }
-
-        function clearDisplay() {
-            currentCalculation = '0';
-            updateDisplay();
-        }
-
-        function calculate() {
-            try {
-                currentCalculation = eval(currentCalculation).toString();
-                updateDisplay();
-            } catch {
-                showNotification('Calculation error', 'error');
+        // Theme Management
+        const themeManager = {
+            themes: {
+                dark: {
+                    '--primary-color': '#007acc',
+                    '--background-color': '#1a1a1a'
+                },
+                light: {
+                    '--primary-color': '#1a73e8',
+                    '--background-color': '#f5f5f5'
+                }
+            },
+            
+            apply: (themeName) => {
+                const theme = themeManager.themes[themeName];
+                Object.entries(theme).forEach(([key, value]) => {
+                    document.documentElement.style.setProperty(key, value);
+                });
+                localStorage.setItem('theme', themeName);
             }
-        }
-
-        function updateDisplay() {
-            document.getElementById('calc-display').textContent = currentCalculation;
-        }
-
-        // Music Player Logic
-        const audioPlayer = new Audio();
-        const tracks = {
-            demo: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/springtide/Sounds_strange_weird_but_unmistakably_romantic_Vol1/springtide_-_03_-_We_Are_Going_To_Disco.mp3',
-            demo2: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_Enthusiast_-_01_PolyCoat.mp3'
         };
 
-        function playTrack(trackId) {
-            audioPlayer.src = tracks[trackId];
-            audioPlayer.play();
-        }
-
-        // Enhanced Notification System
-        class NotificationSystem {
-            constructor() {
-                this.notificationCenter = document.getElementById('notification-center');
-            }
-
-            show(message, type = 'info', duration = 3000) {
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                notification.textContent = message;
-                this.notificationCenter.appendChild(notification);
-                
-                setTimeout(() => notification.remove(), duration);
-                this.updateVisibility();
-            }
-
-            updateVisibility() {
-                this.notificationCenter.style.display = 
-                    this.notificationCenter.children.length > 0 ? 'block' : 'none';
-            }
-        }
-
-        // System Initialization
-        const notificationSystem = new NotificationSystem();
-
-        // Enhanced Context Menu
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const contextMenu = document.getElementById('context-menu');
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = `${e.clientX}px`;
-            contextMenu.style.top = `${e.clientY}px`;
-        });
-
-        document.addEventListener('click', () => {
-            document.getElementById('context-menu').style.display = 'none';
-        });
-
-        // Battery Status Monitoring
-        navigator.getBattery?.()?.then(battery => {
-            const updateBatteryStatus = () => {
-                document.getElementById('battery-status').textContent = 
-                    `${battery.charging ? '⚡' : '🔋'} ${Math.floor(battery.level * 100)}%`;
-            };
+        // Initialization
+        function initializeSystem() {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || SYSTEM_CONFIG.defaultTheme;
+            themeManager.apply(savedTheme);
             
-            battery.addEventListener('levelchange', updateBatteryStatus);
-            battery.addEventListener('chargingchange', updateBatteryStatus);
-            updateBatteryStatus();
-        });
-
-        // Session Management
-        let sessionTimeout;
-        function resetSessionTimeout() {
-            clearTimeout(sessionTimeout);
-            sessionTimeout = setTimeout(() => {
-                location.reload();
-            }, SYSTEM.SESSION_TIMEOUT);
-        }
-
-        // Event Listeners
-        document.addEventListener('mousemove', resetSessionTimeout);
-        document.addEventListener('keypress', resetSessionTimeout);
-
-        // Initialize System
-        function initializeDesktop() {
-            loadUserPreferences();
-            checkSystemStatus();
-            loadProjects();
-            updateNetworkStatus();
-            windowManager.open('terminal');
-            
+            // Set up clock
             setInterval(() => {
                 document.getElementById('taskbar-clock').textContent = 
                     new Date().toLocaleTimeString();
             }, 1000);
+            
+            // Set up event listeners
+            document.getElementById('terminal-input').addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') {
+                    const command = e.target.value.trim();
+                    terminal.history.push(command);
+                    const result = terminal.execute(command);
+                    
+                    const output = document.getElementById('terminal-output');
+                    output.innerHTML += `<div>${result}</div>`;
+                    e.target.value = '';
+                }
+            });
         }
 
-        // ... (remaining initialization code from previous versions) ...
+        // Start the system
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('login-container').style.display = 'flex';
+            }, 3000);
+            
+            initializeSystem();
+        };
     </script>
 </body>
 </html>
